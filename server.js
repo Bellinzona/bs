@@ -40,8 +40,8 @@ app.post("/create_preference", (req, res) => {
       }
     ],
     back_urls: {
-      "success": `http://localhost:5173/CompraFinalizada?title=${req.body.description}&unit_price=${req.body.price}&quantity=${req.body.quantity}`,
-      "failure": "http://localhost:5173/",
+      "success": `https://deluxe-jalebi-133777.netlify.app/CompraFinalizada?title=${req.body.description}&unit_price=${req.body.price}&quantity=${req.body.quantity}`,
+      "failure": "https://deluxe-jalebi-133777.netlify.app/",
       "pending": ""
     },
     auto_return: "approved",
