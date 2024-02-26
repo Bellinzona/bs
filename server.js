@@ -40,7 +40,7 @@ app.post("/create_preference", (req, res) => {
       }
     ],
     back_urls: {
-      "success": `https://deluxe-jalebi-133777.netlify.app/CompraFinalizada?title=${req.body.description}&unit_price=${req.body.price}&quantity=${req.body.quantity}`,
+      "success": `http://localhost:5173/CompraFinalizada?title=${req.body.description}&unit_price=${req.body.price}&quantity=${req.body.quantity}`,
       "failure": "https://deluxe-jalebi-133777.netlify.app/",
       "pending": ""
     },
@@ -59,7 +59,7 @@ app.post("/create_preference", (req, res) => {
     });
 });
 
-app.get('/CompraFinalizada', (req, res) => {
+app.get('https://deluxe-jalebi-133777.netlify.app/CompraFinalizada', (req, res) => {
   // Puedes acceder a todos los parámetros de la URL a través de req.query
   const requestBodyInfo = req.query;
 
@@ -75,6 +75,7 @@ app.get('/CompraFinalizada', (req, res) => {
   // Aquí deberías tener la lógica para obtener la información del pago, por ejemplo, consultando una base de datos
   // Puedes ajustar esta parte según tus necesidades
 
+  console.log(responseInfo)
   res.json(responseInfo);
 });
 
