@@ -59,7 +59,7 @@ app.post("/create_preference", (req, res) => {
     });
 });
 
-app.get('https://deluxe-jalebi-133777.netlify.app/CompraFinalizada', (req, res) => {
+app.get('/CompraFinalizada', (req, res) => {
   // Puedes acceder a todos los parámetros de la URL a través de req.query
   const requestBodyInfo = req.query;
 
