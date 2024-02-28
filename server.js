@@ -40,7 +40,7 @@ app.post("/create_preference", (req, res) => {
       }
     ],
     back_urls: {
-      "success": `http://localhost:5173/CompraFinalizada`,
+      "success": `https://main--mellifluous-crumble-6f8160.netlify.app`,
       "failure": "https://deluxe-jalebi-133777.netlify.app/",
       "pending": ""
     },
