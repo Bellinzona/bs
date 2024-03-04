@@ -41,7 +41,7 @@ app.post("/create_preference", (req, res) => {
     ],
     back_urls: {
       "success": `https://main--mellifluous-crumble-6f8160.netlify.app`,
-      "failure": "https://deluxe-jalebi-133777.netlify.app/",
+      "failure": "https://bubbamilanesas.netlify.app/",
       "pending": ""
     },
     auto_return: "approved",
