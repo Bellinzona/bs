@@ -45,6 +45,7 @@ app.post("/create_preference", (req, res) => {
       "pending": ""
     },
     auto_return: "approved",
+    notification_url: "https://bs-i4ni.onrender.com/webHook"
   };
 
   mercadopago.preferences.create(preference)
@@ -58,6 +59,20 @@ app.post("/create_preference", (req, res) => {
       console.log(error);
     });
 });
+
+app.post("/webHook", (req,res) => {
+  const payment = req.body;
+
+  if (payment.action === 'payment.created') {
+    console.log(`Payment created: ${JSON.stringify(payment)}`);
+  } else if (payment.action === 'payment.updated') {
+    console.log(`Payment updated: ${JSON.stringify(payment)}`);
+  }
+
+  res.send("gal " + payment.action)
+
+
+})
 
 app.get('/CompraFinalizada', (req, res) => {
   // Puedes acceder a todos los parámetros de la URL a través de req.query
