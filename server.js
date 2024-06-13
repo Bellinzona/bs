@@ -2,6 +2,15 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mercadopago = require("mercadopago");
+const admin = require('firebase-admin');
+const { v4: uuidv4 } = require('uuid');
+
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(), // o admin.credential.cert(serviceAccount)
+  databaseURL: "https://bubbamilanesas-61c38.firebaseio.com"
+});
+
+const db = admin.database();
 
 mercadopago.configure({
   access_token: "APP_USR-4072506350930351-122920-1476b0073389bef23ff181ab511922e7-1070363034",
@@ -10,11 +19,7 @@ mercadopago.configure({
 app.use(express.json());
 app.use(cors());
 
-// Variable global en el objeto app
-app.set('globalInfo', {});
-
-app.post("/create_preference", (req, res) => {
-  // Crear un objeto con la información del req.body.description
+app.post("/create_preference", async (req, res) => {
   const requestBodyInfo = {
     description: req.body.description,
     price: Number(req.body.price),
@@ -26,10 +31,13 @@ app.post("/create_preference", (req, res) => {
     local: req.body.local
   };
 
-  console.log(requestBodyInfo)
+  console.log(requestBodyInfo);
 
-  // Guardar la información en el objeto app
-  app.set('globalInfo', requestBodyInfo);
+  // Generar un identificador único
+  const uuid = uuidv4();
+
+  // Guardar requestBodyInfo en Firebase bajo el identificador único
+  await db.ref(`payment_requests/${uuid}`).set(requestBodyInfo);
 
   let preference = {
     items: [
@@ -45,14 +53,15 @@ app.post("/create_preference", (req, res) => {
       "pending": ""
     },
     auto_return: "approved",
-    notification_url: "https://bs-i4ni.onrender.com/webHook"
+    notification_url: "https://bs-i4ni.onrender.com/webHook",
+    external_reference: uuid  // Agregar el identificador único como referencia externa
   };
 
   mercadopago.preferences.create(preference)
     .then(function (response) {
       res.json({
         id: response.body.id,
-        RequestBodyInfo: app.get('globalInfo') // Obtener la información del objeto app
+        RequestBodyInfo: requestBodyInfo  // Obtener la información del objeto app
       });
     })
     .catch(function (error) {
@@ -60,37 +69,49 @@ app.post("/create_preference", (req, res) => {
     });
 });
 
-app.post("/webHook", (req,res) => {
+app.post("/webHook", async (req, res) => {
   const payment = req.body;
 
-  if (payment.action === 'payment.created') {
-    console.log(`Payment created: ${JSON.stringify(payment)}`);
-  } else if (payment.action === 'payment.updated') {
-    console.log(`Payment updated: ${JSON.stringify(payment)}`);
+  if (payment.action === 'payment.created' || payment.action === 'payment.updated') {
+    try {
+      // Obtener el identificador único desde la notificación
+      const externalReference = payment.data.external_reference;
+
+      // Recuperar requestBodyInfo desde Firebase usando el identificador único
+      const snapshot = await db.ref(`payment_requests/${externalReference}`).once('value');
+      const requestBodyInfo = snapshot.val();
+
+      if (requestBodyInfo) {
+        // Guardar la información del pago en Firebase
+        await db.ref("Pagos").push({
+          ...requestBodyInfo,
+          paymentInfo: payment
+        });
+        console.log(`Payment ${payment.action}: ${JSON.stringify(payment)}`);
+      } else {
+        console.error('No requestBodyInfo found for external reference:', externalReference);
+      }
+
+      res.sendStatus(200);
+    } catch (error) {
+      console.error('Error processing webhook:', error);
+      res.sendStatus(500);
+    }
+  } else {
+    res.sendStatus(400);
   }
-
-  res.send("gal " + payment.action)
-
-
-})
+});
 
 app.get('/CompraFinalizada', (req, res) => {
-  // Puedes acceder a todos los parámetros de la URL a través de req.query
   const requestBodyInfo = req.query;
-
-  // Obtén la información del objeto app
   const appInfo = app.get('globalInfo');
 
-  // Agrega requestBodyInfo al objeto appInfo
   const responseInfo = {
     RequestBodyInfo: appInfo,
     QueryParams: requestBodyInfo
   };
 
-  // Aquí deberías tener la lógica para obtener la información del pago, por ejemplo, consultando una base de datos
-  // Puedes ajustar esta parte según tus necesidades
-
-  console.log(responseInfo)
+  console.log(responseInfo);
   res.json(responseInfo);
 });
 
