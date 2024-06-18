@@ -44,7 +44,7 @@ app.post("/create_preference", (req, res) => {
       
     ],
     back_urls: {
-      "success": `https://main--mellifluous-crumble-6f8160.netlify.app`,
+      "success": `https://bubbamilanesas.com/CompraFinalizada`,
       "failure": "https://bubbamilanesas.com/",
       "pending": ""
     },
