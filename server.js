@@ -2,16 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mercadopago = require("mercadopago");
-const admin = require('firebase-admin');
-
-
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-  databaseURL: "https://bubbamilanesas-61c38.firebaseio.com"
-})
-
-
-const db = admin.database();
 
 
 mercadopago.configure({
@@ -54,11 +44,11 @@ app.post("/create_preference", (req, res) => {
     ],
     back_urls: {
       "success": `https://main--mellifluous-crumble-6f8160.netlify.app`,
-      "failure": "https://bubbamilanesas.netlify.app/",
+      "failure": "https://bubbamilanesas.com/",
       "pending": ""
     },
     auto_return: "approved",
-    notification_url: `https://bs-i4ni.onrender.com/webHook?=${requestBodyInfo.nombre}`
+    notification_url: "http://localhost:8080/webHook"
     
   };
 
@@ -76,16 +66,19 @@ app.post("/create_preference", (req, res) => {
 
 app.post("/webHook", (req,res) => {
   const payment = req.body;
-  const nombre = req.bo
+  const RequestBodyInfo = app.get('globalInfo')
+  console.log(RequestBodyInfo)
+
+ 
 
   if (payment.action === 'payment.created') {
     console.log(`Payment created: ${JSON.stringify(payment)}`);
-    db.ref("Pagos").push(requestBodyInfo)
+    
   } else if (payment.action === 'payment.updated') {
     console.log(`Payment updated: ${JSON.stringify(payment)}`);
   }
 
-  res.send("gal " + payment.action)
+  res.send("gal " + RequestBodyInfo)
 
 
 })
