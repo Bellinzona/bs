@@ -44,7 +44,7 @@ app.post("/create_preference", (req, res) => {
       
     ],
     back_urls: {
-      "success": `https://bubbamilanesas.com/CompraFinalizada`,
+      "success": `https://bubbamilanesas.com/`,
       "failure": "https://bubbamilanesas.com/",
       "pending": ""
     },
