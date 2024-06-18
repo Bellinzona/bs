@@ -48,7 +48,7 @@ app.post("/create_preference", (req, res) => {
       "pending": ""
     },
     auto_return: "approved",
-    notification_url: "http://localhost:8080/webHook"
+    notification_url: "https://bs-i4ni.onrender.com/webHook"
     
   };
 
@@ -78,7 +78,7 @@ app.post("/webHook", (req,res) => {
     console.log(`Payment updated: ${JSON.stringify(payment)}`);
   }
 
-  res.send("gal " + RequestBodyInfo)
+  res.send("gaaaaaaaaaaaal " + RequestBodyInfo)
 
 
 })
