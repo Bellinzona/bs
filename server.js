@@ -65,35 +65,29 @@ app.post("/create_preference", (req, res) => {
     });
 });
 
-app.post("/webHook", (req,res) => {
+app.post("/webHook", (req, res) => {
   const payment = req.body;
-  const RequestBodyInfo = app.get('globalInfo')
-  
+  const RequestBodyInfo = app.get('globalInfo');
 
- 
+  // Enviar respuesta HTTP 200 inmediatamente para confirmar recepción
+  res.sendStatus(200);
 
   if (payment.action === 'payment.created') {
     console.log(`Payment created: ${JSON.stringify(payment)}`);
-    
   } else if (payment.action === 'payment.updated') {
     console.log(`Payment updated: ${JSON.stringify(payment)}`);
   }
 
-  console.log("esto se tiene que guardar : " + RequestBodyInfo)
+  console.log("esto se tiene que guardar: ", RequestBodyInfo);
+
   db.collection('Pagos').add(RequestBodyInfo)
     .then(docRef => {
       console.log("Document written with ID: ", docRef.id);
-      res.send({ message: "Data saved to Firebase", id: docRef.id });
     })
     .catch(error => {
       console.error("Error adding document: ", error);
-      res.status(500).send("Error saving data to Firebase");
     });
-
-  
-
-
-})
+});
 
 app.get('/CompraFinalizada', (req, res) => {
   // Puedes acceder a todos los parámetros de la URL a través de req.query
