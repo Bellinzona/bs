@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mercadopago = require("mercadopago");
+const db = require("./firebaseConfig")
 
 
 mercadopago.configure({
@@ -78,7 +79,17 @@ app.post("/webHook", (req,res) => {
     console.log(`Payment updated: ${JSON.stringify(payment)}`);
   }
 
-  res.send("gaaaaaaaaaaaal " + RequestBodyInfo)
+  db.collection('Pagos').add(RequestBodyInfo)
+    .then(docRef => {
+      console.log("Document written with ID: ", docRef.id);
+      res.send({ message: "Data saved to Firebase", id: docRef.id });
+    })
+    .catch(error => {
+      console.error("Error adding document: ", error);
+      res.status(500).send("Error saving data to Firebase");
+    });
+
+  res.send(RequestBodyInfo)
 
 
 })
