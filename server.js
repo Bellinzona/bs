@@ -74,19 +74,36 @@ app.post("/webHook", (req, res) => {
 
   if (payment.action === 'payment.created') {
     console.log(`Payment created: ${JSON.stringify(payment)}`);
-  } else if (payment.action === 'payment.updated') {
-    console.log(`Payment updated: ${JSON.stringify(payment)}`);
-  }
 
-  console.log("esto se tiene que guardar: ", RequestBodyInfo);
-
-  db.collection('Pagos').add(RequestBodyInfo)
+    db.collection("Pagos").add(RequestBodyInfo)
     .then(docRef => {
       console.log("Document written with ID: ", docRef.id);
+      console.log("esto se tiene que guardar: ", RequestBodyInfo);
+
     })
     .catch(error => {
       console.error("Error adding document: ", error);
     });
+
+
+
+  } else if (payment.action === 'payment.updated') {
+    console.log(`Payment updated: ${JSON.stringify(payment)}`);
+
+    db.collection("Pagos").add(RequestBodyInfo)
+    .then(docRef => {
+      console.log("esto se tiene que guardar: ", RequestBodyInfo);
+      console.log("Document written with ID: ", docRef.id);
+
+    })
+    .catch(error => {
+      console.error("Error adding document: ", error);
+    });
+  }
+
+  
+
+  
 });
 
 app.get('/CompraFinalizada', (req, res) => {
