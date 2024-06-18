@@ -68,7 +68,7 @@ app.post("/create_preference", (req, res) => {
 app.post("/webHook", (req,res) => {
   const payment = req.body;
   const RequestBodyInfo = app.get('globalInfo')
-  console.log(RequestBodyInfo)
+  
 
  
 
@@ -79,6 +79,7 @@ app.post("/webHook", (req,res) => {
     console.log(`Payment updated: ${JSON.stringify(payment)}`);
   }
 
+  console.log("esto se tiene que guardar : " + RequestBodyInfo)
   db.collection('Pagos').add(RequestBodyInfo)
     .then(docRef => {
       console.log("Document written with ID: ", docRef.id);
@@ -89,7 +90,7 @@ app.post("/webHook", (req,res) => {
       res.status(500).send("Error saving data to Firebase");
     });
 
-  res.send(RequestBodyInfo)
+  
 
 
 })
