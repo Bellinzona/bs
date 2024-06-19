@@ -106,17 +106,12 @@ app.get('/CompraFinalizada', (req, res) => {
   res.json(responseInfo);
 });
 
+// Configurar el servidor para servir los archivos estáticos de React
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Manejar todas las rutas redirigiéndolas al index.html
 app.get('*', (req, res) => {
-  const fileUrl = `https://https://bubbamilanesas.com${req.path}`;
-  axios.get(fileUrl, { responseType: 'arraybuffer' })
-    .then(response => {
-      res.set('Content-Type', response.headers['content-type']);
-      res.send(response.data);
-    })
-    .catch(error => {
-      console.error(`Error fetching ${fileUrl}:`, error);
-      res.status(500).send('Error fetching file from Hostinger');
-    });
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Iniciar el servidor
