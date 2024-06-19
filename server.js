@@ -43,7 +43,7 @@ app.post("/create_preference", (req, res) => {
       }
     ],
     back_urls: {
-      "success": `https://bubbamilanesas.com/`,
+      "success": `https://bubbamilanesas.com/CompraFinalizada`,
       "failure": "https://bubbamilanesas.com/",
       "pending": ""
     },
@@ -106,16 +106,10 @@ app.get('/CompraFinalizada', (req, res) => {
   res.json(responseInfo);
 });
 
-// Configurar el servidor para servir los archivos estáticos de React
-app.use(express.static(path.join(__dirname, 'dist')));
 
-// Manejar todas las rutas redirigiéndolas al index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
 
 // Iniciar el servidor
-const port = process.env.PORT || 8080;
+const port = 8080;
 app.listen(port, () => {
   console.log(`The server is now running on Port ${port}`);
 });
