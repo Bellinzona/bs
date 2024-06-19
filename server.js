@@ -3,6 +3,7 @@ const cors = require("cors");
 const mercadopago = require("mercadopago");
 const path = require("path");
 const db = require("./firebaseConfig");
+const axios = require("axios");
 
 const app = express();
 
